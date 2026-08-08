@@ -57,66 +57,124 @@ textarea::placeholder {
 
 /* ---------- Animations ---------- */
 @keyframes kenburns {
-  from { transform: scale(1.08); }
-  to   { transform: scale(1.18); }
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1.18);
+  }
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(26px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes fadeUpSm {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Two identical keyframes so re-filtering can restart the stagger. */
 @keyframes fadeUpA {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes fadeUpB {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.5; }
-  50%      { opacity: 0.9; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
 @keyframes ticker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes drift1 {
-  0%, 100% { transform: translate(0, 0); }
-  50%      { transform: translate(60px, -40px); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(60px, -40px);
+  }
 }
 
 @keyframes drift2 {
-  0%, 100% { transform: translate(0, 0); }
-  50%      { transform: translate(-70px, 50px); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-70px, 50px);
+  }
 }
 
 @keyframes lineGrow {
-  from { width: 0; }
-  to   { width: 100%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes dockPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(219, 165, 90, 0.5); }
-  50%      { box-shadow: 0 0 0 6px rgba(219, 165, 90, 0); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(219, 165, 90, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(219, 165, 90, 0);
+  }
 }
 
 /* ---------- Scroll reveal ---------- */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease;
 }
 
 .reveal.is-visible {
@@ -149,7 +207,9 @@ textarea::placeholder {
 
 .sig-card:hover {
   border-color: rgba(192, 134, 61, 0.7);
-  box-shadow: 0 28px 60px -20px rgba(0, 0, 0, 0.75), 0 0 36px -8px rgba(192, 134, 61, 0.3);
+  box-shadow:
+    0 28px 60px -20px rgba(0, 0, 0, 0.75),
+    0 0 36px -8px rgba(192, 134, 61, 0.3);
 }
 
 /* ==========================================================================
@@ -238,12 +298,16 @@ textarea::placeholder {
     overflow: hidden;
     transform-style: preserve-3d;
     will-change: transform;
-    transition: box-shadow 0.4s ease, border-color 0.4s ease;
+    transition:
+      box-shadow 0.4s ease,
+      border-color 0.4s ease;
   }
 
   .dish-card[data-dv="grid"]:hover {
     border-color: rgba(192, 134, 61, 0.65);
-    box-shadow: 0 22px 46px -16px rgba(0, 0, 0, 0.7), 0 0 28px -6px rgba(192, 134, 61, 0.26);
+    box-shadow:
+      0 22px 46px -16px rgba(0, 0, 0, 0.7),
+      0 0 28px -6px rgba(192, 134, 61, 0.26);
   }
 
   .dish-card[data-dv="grid"] .dish-thumb {
@@ -591,8 +655,11 @@ textarea::placeholder {
   background-size: cover;
   background-position: center;
   filter: saturate(0.55) brightness(0.8);
-  transition: flex 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease,
-    border-color 0.5s ease, box-shadow 0.5s ease;
+  transition:
+    flex 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s ease,
+    border-color 0.5s ease,
+    box-shadow 0.5s ease;
 }
 
 .chapter-hit {
@@ -618,7 +685,9 @@ textarea::placeholder {
     flex: 3.4;
     filter: saturate(1) brightness(1);
     border-color: rgba(192, 134, 61, 0.7);
-    box-shadow: 0 22px 48px -16px rgba(0, 0, 0, 0.7), 0 0 30px -8px rgba(192, 134, 61, 0.3);
+    box-shadow:
+      0 22px 48px -16px rgba(0, 0, 0, 0.7),
+      0 0 30px -8px rgba(192, 134, 61, 0.3);
   }
 
   .chapter-content {
@@ -633,11 +702,15 @@ textarea::placeholder {
   }
 
   .chapter-name {
-    transition: opacity 0.45s 0.12s ease, transform 0.45s 0.12s ease;
+    transition:
+      opacity 0.45s 0.12s ease,
+      transform 0.45s 0.12s ease;
   }
 
   .chapter-meta {
-    transition: opacity 0.45s 0.2s ease, transform 0.45s 0.2s ease;
+    transition:
+      opacity 0.45s 0.2s ease,
+      transform 0.45s 0.2s ease;
   }
 
   .chapter-panel:hover .chapter-name,
@@ -668,7 +741,9 @@ textarea::placeholder {
     flex: 4.2;
     filter: saturate(1) brightness(1);
     border-color: rgba(192, 134, 61, 0.6);
-    box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.7), 0 0 26px -8px rgba(192, 134, 61, 0.3);
+    box-shadow:
+      0 18px 40px -14px rgba(0, 0, 0, 0.7),
+      0 0 26px -8px rgba(192, 134, 61, 0.3);
   }
 
   .chapter-content {
@@ -684,7 +759,9 @@ textarea::placeholder {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s 0.1s ease;
+    transition:
+      max-height 0.5s ease,
+      opacity 0.5s 0.1s ease;
   }
 
   .chapter-panel[data-active="true"] .chapter-meta {
@@ -696,6 +773,35 @@ textarea::placeholder {
   .ch-arrow {
     display: none;
   }
+}
+
+/* ==========================================================================
+   Reservation form fields
+
+   iOS Safari sizes date/time inputs from the native control rather than the
+   grid track, so the pair spills out of its columns and the two borders
+   collide. Stripping the native appearance hands sizing back to the layout,
+   min-width stops the grid item claiming its content width, and the explicit
+   height replaces the intrinsic one appearance:none discards — which also
+   keeps the row level with the plain text fields.
+   ========================================================================== */
+
+input.form-field,
+textarea.form-field {
+  min-width: 0;
+  max-width: 100%;
+}
+
+input.form-field {
+  height: 48px;
+}
+
+input.form-field[type="date"],
+input.form-field[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  text-align: left;
 }
 
 /* ==========================================================================
@@ -814,6 +920,14 @@ textarea::placeholder {
     grid-column: 1 / -1;
   }
 
+  /* Buys the native pickers more room inside the half-width column. */
+  input.form-field[type="date"],
+  input.form-field[type="time"] {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    font-size: 14px !important;
+  }
+
   .reserve-panel {
     padding: 28px 22px !important;
     scroll-margin-top: 76px !important;
@@ -856,6 +970,7 @@ textarea::placeholder {
 
   .contact-info-col {
     gap: 22px !important;
+    width: 100%;
   }
 
   /* ---- Home hero ---- */
@@ -977,6 +1092,17 @@ textarea::placeholder {
   .order-links > a {
     text-align: center;
     padding: 14px !important;
+  }
+}
+
+/*
+ * Below ~360px two native date pickers cannot share a row without clipping,
+ * so the whole row goes full width. Must follow the 900px block: identical
+ * specificity, both !important, so the later declaration is the one that wins.
+ */
+@media (max-width: 359px) {
+  .form-row-3 {
+    grid-template-columns: 1fr !important;
   }
 }
 

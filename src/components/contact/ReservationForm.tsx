@@ -124,6 +124,7 @@ export default function ReservationForm() {
             }}
           >
             <input
+              className="form-field"
               value={form.name}
               onChange={(e) => set("name")(e.target.value)}
               placeholder="Your name"
@@ -131,6 +132,7 @@ export default function ReservationForm() {
               style={inputStyle}
             />
             <input
+              className="form-field"
               value={form.phone}
               onChange={(e) => set("phone")(e.target.value)}
               placeholder="Phone or email"
@@ -148,6 +150,7 @@ export default function ReservationForm() {
             }}
           >
             <input
+              className="form-field"
               type="date"
               value={form.date}
               onChange={(e) => set("date")(e.target.value)}
@@ -155,6 +158,7 @@ export default function ReservationForm() {
               style={inputStyle}
             />
             <input
+              className="form-field"
               type="time"
               value={form.time}
               onChange={(e) => set("time")(e.target.value)}
@@ -162,6 +166,7 @@ export default function ReservationForm() {
               style={inputStyle}
             />
             <input
+              className="form-field"
               type="number"
               value={form.guests}
               onChange={(e) => set("guests")(e.target.value)}
@@ -174,6 +179,7 @@ export default function ReservationForm() {
           </div>
 
           <textarea
+            className="form-field"
             value={form.notes}
             onChange={(e) => set("notes")(e.target.value)}
             placeholder="Allergies, occasions, high chair…"
