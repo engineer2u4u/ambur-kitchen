@@ -1,0 +1,7 @@
+# Shell scripts must keep LF. This repo is developed on Windows with
+# core.autocrlf on, and bash fails with "$'\r': command not found" if a script
+# is checked out with CRLF endings.
+*.sh text eol=lf
+
+# Read by Apache on a Linux server.
+.htaccess text eol=lf
