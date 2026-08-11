@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "bash deploy/deploy.sh",
+    "deploy:dry": "bash deploy/deploy.sh --dry"
   },
   "dependencies": {
     "next": "^16.3.0",

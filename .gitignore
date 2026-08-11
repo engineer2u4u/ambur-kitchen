@@ -14,3 +14,6 @@ next-env.d.ts
 
 # claude code
 /.claude/
+
+# deploy
+/deploy/deploy.env

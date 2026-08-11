@@ -8,9 +8,35 @@ The Ambur Kitchen — a South Indian restaurant in the Netherlands.
 ```bash
 npm install
 npm run dev     # http://localhost:3000
-npm run build   # production build
-npm start       # serve the production build
+npm run build   # static export into out/
 ```
+
+Note `npm start` is not usable here: `next.config.ts` sets `output: "export"`,
+so the build emits static files rather than a server to run.
+
+## Deploying
+
+Live at <https://theamburkitchen.nl>, on SiteGround shared hosting.
+
+```bash
+npm run deploy:dry   # show what would change on the server
+npm run deploy       # build, upload, sync
+```
+
+SiteGround has no Node runtime — Site Tools is Apache/LiteSpeed + PHP only — so
+the site ships as a pre-rendered export. Every route is static, so nothing is
+lost by it. `deploy/deploy.sh` builds, copies `deploy/.htaccess` into `out/`,
+uploads a tarball, and runs `rsync -a --delete` server-side into the document
+root. `.well-known/` is excluded so certificate renewal is never deleted.
+
+Connection settings live in `~/.ssh/config` under the `siteground-ambur` host
+(port 18765, not 22). Override paths per-machine with `deploy/deploy.env` —
+see `deploy/deploy.env.example`.
+
+**Replacing a photo:** give it a new filename rather than overwriting it.
+SiteGround's NGINX Direct Delivery serves `/images/*` before Apache sees the
+request and stamps a one-year `max-age`, which `.htaccess` cannot override — so
+an in-place replacement never reaches anyone who has already visited the site.
 
 ## Routes
 

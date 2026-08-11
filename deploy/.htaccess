@@ -1,0 +1,61 @@
+# theamburkitchen.nl — static Next.js export on SiteGround (Apache/LiteSpeed)
+#
+# Copied into out/ by deploy/deploy.sh, so it ships to public_html with the
+# rest of the build. Edit it here, never on the server: a deploy overwrites it.
+
+# next.config.ts sets trailingSlash, so every route is its own directory index.
+DirectoryIndex index.html
+
+# The exported not-found page.
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # One canonical origin: https, no www. Both redirects must come before any
+  # content rules so a visitor is moved before anything is served.
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://theamburkitchen.nl%{REQUEST_URI} [R=301,L]
+
+  RewriteCond %{HTTP_HOST} ^www\.theamburkitchen\.nl$ [NC]
+  RewriteRule ^ https://theamburkitchen.nl%{REQUEST_URI} [R=301,L]
+
+  # Flags the content-hashed build output for the immutable header below.
+  # .htaccess cannot use <LocationMatch>, so the path test happens here.
+  RewriteRule ^_next/static/ - [E=IMMUTABLE:1]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Filenames under _next/static carry a content hash, so a stale copy can
+  # never be the wrong copy — cache it for a year.
+  Header set Cache-Control "public, max-age=31536000, immutable" env=IMMUTABLE
+
+  # NOTE: on SiteGround this rule does NOT take effect. NGINX Direct Delivery
+  # serves static assets before the request ever reaches Apache, stamping its
+  # own max-age=31536000 (confirmed via Server: nginx + X-Proxy-Cache-Info on
+  # /images/*). Photo filenames are not fingerprinted, so REPLACING A PHOTO
+  # IN PLACE WILL NOT REACH ANYONE WHO HAS ALREADY VISITED — rename the file
+  # instead (hero-bg-2.jpg), which changes the URL and sidesteps the cache.
+  # Kept here so the intent survives if Direct Delivery is ever turned off in
+  # Site Tools > Speed > Caching.
+  <FilesMatch "\.(jpe?g|png|gif|svg|webp|avif|ico)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # HTML must revalidate, or a deploy never reaches an existing visitor.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain \
+    application/javascript application/json image/svg+xml
+</IfModule>
+
+# Directory listings should never be reachable.
+Options -Indexes
