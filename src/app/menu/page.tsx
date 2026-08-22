@@ -98,7 +98,7 @@ export default function MenuPage() {
             textWrap: "pretty",
           }}
         >
-          From the biryani lanes of Ambur to the coasts of Malabar — seven
+          From the biryani lanes of Ambur to the coasts of Malabar — {MENU.length}
           chapters, {TOTAL_DISHES} dishes.
         </p>
         <div

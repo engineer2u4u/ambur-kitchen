@@ -19,13 +19,13 @@ export const colors = {
 export const restaurant = {
   name: "THE AMBUR KITCHEN",
   tagline: "SOUL OF INDIAN CUISINE",
-  street: "Streetname 12",
-  postal: "1234 AB City, Netherlands",
-  addressLine: "Streetname 12, City, Netherlands",
-  phone: "+31 6 0000 0000",
-  phoneHref: "tel:+31600000000",
+  street: "Hooikade",
+  postal: "2514 BK Den Haag, Netherlands",
+  addressLine: "Hooikade, 2514 BK Den Haag, Netherlands",
+  phone: "+31 70 887 7990",
+  phoneHref: "tel:+31708877990",
   email: "hello@theamburkitchen.nl",
-  hoursShort: "Tue–Sun 12:00–22:00",
+  hoursShort: "Mon–Fri 17:00–22:00 · Sat–Sun 12:00–22:00",
 } as const;
 
 export const cream = (alpha: number) => `rgba(242,236,223,${alpha})`;

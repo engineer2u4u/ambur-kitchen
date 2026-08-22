@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import Hero from "@/components/home/Hero";
-import Timeline from "@/components/home/Timeline";
 import Signatures from "@/components/home/Signatures";
 import SignaturesMobile from "@/components/home/SignaturesMobile";
 import StorySection from "@/components/home/StorySection";
@@ -15,7 +14,6 @@ export default function HomePage() {
     <div style={{ minHeight: "100vh", background: colors.navy }}>
       <Header />
       <Hero />
-      <Timeline />
 
       <Reveal
         as="section"

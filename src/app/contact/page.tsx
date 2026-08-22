@@ -11,10 +11,12 @@ export const metadata: Metadata = {
 };
 
 const HOURS: [string, string, boolean?][] = [
-  ["Tue – Fri", "17:00 – 22:00"],
+  ["Mon – Fri", "17:00 – 22:00"],
   ["Sat – Sun", "12:00 – 22:00"],
-  ["Monday", "Closed", true],
 ];
+
+const MAP_EMBED =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2451.6343156671223!2d4.309501076991126!3d52.08638646824203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b73978a3d209%3A0x916d4964403bd793!2sKrishna%20Vilas%20Den%20Haag%20-%20Indian%20Vegetarian%2FVegan%20restaurant!5e0!3m2!1sen!2sin!4v1786734749888!5m2!1sen!2sin";
 
 const ORDER_LINKS = [
   { label: "THUISBEZORGD", href: "#" },
@@ -34,6 +36,18 @@ const panelHeading = {
   fontWeight: 600,
   color: colors.goldLight,
 } as const;
+
+/** Hover/focus veil for the panels that aren't taking real bookings yet. */
+function SoonVeil({ note }: { note: string }) {
+  return (
+    <div className="soon-veil" aria-hidden>
+      <div className="soon-veil-title">COMING SOON</div>
+      <p className="soon-veil-note" style={{ margin: 0 }}>
+        {note}
+      </p>
+    </div>
+  );
+}
 
 export default function ContactPage() {
   return (
@@ -164,9 +178,10 @@ export default function ContactPage() {
 
             <div
               id="order"
-              className="contact-panel"
+              className="contact-panel soon-wrap"
               style={{ ...panelStyle, scrollMarginTop: 104 }}
             >
+              <SoonVeil note="Takeaway ordering opens when our doors do." />
               <h2
                 className="contact-panel-title"
                 style={{ ...panelHeading, margin: "0 0 8px" }}
@@ -206,34 +221,33 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div
-              className="contact-map"
-              style={{
-                border: `1px solid ${goldA(0.22)}`,
-                height: 230,
-                background:
-                  "repeating-linear-gradient(45deg,#0E1B36,#0E1B36 14px,#10203f 14px,#10203f 28px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "ui-monospace, monospace",
-                  fontSize: 12,
-                  letterSpacing: "2px",
-                  color: cream(0.45),
-                }}
-              >
-                [ MAP — drop in Google Maps embed ]
-              </span>
-            </div>
           </div>
 
-          <div className="contact-form-col">
+          <div className="contact-form-col soon-wrap">
             <ReservationForm />
+            <SoonVeil note="Reservations open when our doors do." />
           </div>
+        </div>
+
+        <div
+          className="contact-map"
+          style={{
+            marginTop: 56,
+            border: `1px solid ${goldA(0.22)}`,
+            height: 380,
+            overflow: "hidden",
+          }}
+        >
+          <iframe
+            src={MAP_EMBED}
+            title={`Map to ${restaurant.name}`}
+            width="100%"
+            height="100%"
+            style={{ border: 0, display: "block" }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
         </div>
       </main>
 

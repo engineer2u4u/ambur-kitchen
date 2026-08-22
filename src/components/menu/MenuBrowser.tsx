@@ -22,6 +22,9 @@ const DIETS: [Diet, string, string][] = [
 const sectionId = (cat: string) =>
   "cat-" + cat.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+/** Some dishes aren't priced yet — show that rather than a bare euro sign. */
+const priceLabel = (p: string) => (p ? `€ ${p}` : "TBC");
+
 /** Segmented-control button, used by the desktop sidebar toggles. */
 function seg(active: boolean): CSSProperties {
   return {
@@ -108,7 +111,7 @@ function DishCard({
           title={dietLabel}
           style={{ background: dotColor }}
         />
-        <span className="dish-price-badge">€ {item.p}</span>
+        <span className="dish-price-badge">{priceLabel(item.p)}</span>
       </div>
 
       <div className="dish-body">
@@ -119,7 +122,7 @@ function DishCard({
             title={dietLabel}
             style={{ background: dotColor }}
           />
-          <span className="dish-price-inline">€ {item.p}</span>
+          <span className="dish-price-inline">{priceLabel(item.p)}</span>
         </div>
         <p className="dish-desc">{item.d}</p>
       </div>
