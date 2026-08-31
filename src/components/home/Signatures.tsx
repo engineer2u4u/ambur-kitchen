@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import MenuLink from "@/components/MenuLink";
 import { useEffect, useState } from "react";
 import { colors, cream, goldA } from "@/lib/theme";
 import { SIGNATURES, SIG_ROTATE_MS } from "@/lib/signatures";
@@ -186,8 +186,7 @@ export default function Signatures() {
         >
           {cur.d}
         </p>
-        <Link
-          href="/menu"
+        <MenuLink
           style={{
             display: "inline-block",
             marginTop: 24,
@@ -198,7 +197,7 @@ export default function Signatures() {
           }}
         >
           FIND IT ON THE MENU →
-        </Link>
+        </MenuLink>
 
         <div style={{ display: "flex", gap: 12, marginTop: 36 }}>
           {SIGNATURES.map((s, i) => (

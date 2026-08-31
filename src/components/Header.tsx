@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
+import MenuLink from "@/components/MenuLink";
 import { colors, cream, goldA, restaurant } from "@/lib/theme";
 
 const NAV = [
@@ -112,16 +113,26 @@ export default function Header() {
             fontWeight: 400,
           }}
         >
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="nav-link"
-              style={desktopLink(item.href)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map((item) =>
+            item.href === "/menu" ? (
+              <MenuLink
+                key={item.href}
+                className="nav-link"
+                style={desktopLink(item.href)}
+              >
+                {item.label}
+              </MenuLink>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="nav-link"
+                style={desktopLink(item.href)}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
           <Link
             href="/contact#reserve"
             style={{
@@ -208,42 +219,60 @@ export default function Header() {
           // NAVIGATION
         </div>
 
-        {NAV.map((item, i) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setOpen(false)}
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: 14,
-              fontFamily: "var(--font-cormorant), serif",
-              fontSize: 36,
-              fontWeight: 600,
-              padding: "13px 0",
-              borderBottom: `1px solid ${goldA(0.14)}`,
-              color: pathname === item.href ? colors.goldLight : colors.cream,
-              opacity: open ? 1 : 0,
-              transform: open ? "none" : "translateY(26px)",
-              transition: `opacity .5s ${0.12 + i * 0.07}s ease, transform .5s ${
-                0.12 + i * 0.07
-              }s ease`,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "ui-monospace, monospace",
-                fontSize: 11,
-                color: goldA(0.6),
-                width: 28,
-                flex: "none",
-              }}
+        {NAV.map((item, i) => {
+          const rowStyle: CSSProperties = {
+            display: "flex",
+            alignItems: "baseline",
+            gap: 14,
+            fontFamily: "var(--font-cormorant), serif",
+            fontSize: 36,
+            fontWeight: 600,
+            padding: "13px 0",
+            borderBottom: `1px solid ${goldA(0.14)}`,
+            color: pathname === item.href ? colors.goldLight : colors.cream,
+            opacity: open ? 1 : 0,
+            transform: open ? "none" : "translateY(26px)",
+            transition: `opacity .5s ${0.12 + i * 0.07}s ease, transform .5s ${
+              0.12 + i * 0.07
+            }s ease`,
+          };
+
+          const row = (
+            <>
+              <span
+                style={{
+                  fontFamily: "ui-monospace, monospace",
+                  fontSize: 11,
+                  color: goldA(0.6),
+                  width: 28,
+                  flex: "none",
+                }}
+              >
+                {"0" + (i + 1)}
+              </span>
+              <span>{item.label}</span>
+            </>
+          );
+
+          return item.href === "/menu" ? (
+            <MenuLink
+              key={item.href}
+              style={rowStyle}
+              onClose={() => setOpen(false)}
             >
-              {"0" + (i + 1)}
-            </span>
-            <span>{item.label}</span>
-          </Link>
-        ))}
+              {row}
+            </MenuLink>
+          ) : (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              style={rowStyle}
+            >
+              {row}
+            </Link>
+          );
+        })}
 
         <Link
           href="/contact#reserve"

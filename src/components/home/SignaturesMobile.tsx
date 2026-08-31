@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import MenuLink from "@/components/MenuLink";
 import { useEffect, useRef, useState } from "react";
 import { colors, cream, goldA } from "@/lib/theme";
 import { SIGNATURES } from "@/lib/signatures";
@@ -186,8 +186,7 @@ export default function SignaturesMobile() {
               >
                 {s.dShort}
               </p>
-              <Link
-                href="/menu"
+              <MenuLink
                 style={{
                   display: "inline-block",
                   marginTop: 14,
@@ -198,7 +197,7 @@ export default function SignaturesMobile() {
                 }}
               >
                 FIND IT ON THE MENU →
-              </Link>
+              </MenuLink>
             </div>
           </article>
         ))}

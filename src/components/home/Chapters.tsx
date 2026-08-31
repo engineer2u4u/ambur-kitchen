@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import MenuLink from "@/components/MenuLink";
 import { useState } from "react";
 import { colors, cream, goldA } from "@/lib/theme";
 import { CHAPTERS } from "@/lib/signatures";
@@ -114,21 +114,19 @@ export default function Chapters() {
                   {c.count} DISHES
                   <span className="ch-arrow"> →</span>
                 </span>
-                <Link
-                  href="/menu"
+                <MenuLink
                   className="ch-open"
                   style={{ letterSpacing: "2px" }}
                 >
                   OPEN CHAPTER →
-                </Link>
+                </MenuLink>
               </div>
             </div>
 
             {/* Desktop makes the whole panel a link; mobile taps to expand. */}
-            <Link
-              href="/menu"
+            <MenuLink
               className="chapter-hit"
-              aria-label={`${c.name} — ${c.count} dishes`}
+              ariaLabel={`${c.name} — ${c.count} dishes`}
               tabIndex={-1}
             />
           </div>
