@@ -5,10 +5,15 @@
 #   ./deploy/deploy.sh         build and publish
 #   ./deploy/deploy.sh --dry   report what would change, transfer nothing
 #
-# Why the staging + rsync dance rather than a plain `scp -r`: only rsync
-# --delete removes files that no longer exist in the build, and Windows has no
-# local rsync. So the tree goes up as a tarball and the server — which does
-# have rsync — syncs from a staging directory into the document root.
+# Why the staging dance rather than a plain `scp -r`: publishing has to remove
+# files the build no longer contains, and Windows has no local rsync. So the
+# tree goes up as a tarball, unpacks into a staging directory, and the server
+# copies it into the document root — deleting whatever staging lacks.
+#
+# This used to be a server-side `rsync -a --delete`. SiteGround's rsync is now
+# 3.5.0 and its receiver fails `chdir` with EPERM on every destination, even a
+# directory we just created and own, while cp and tar work in the same shell.
+# Until that is fixed upstream, the copy and the prune are done by hand.
 #
 set -euo pipefail
 
@@ -22,11 +27,7 @@ REMOTE_ROOT="${REMOTE_ROOT:-/home/customer/www/theamburkitchen.nl/public_html}"
 STAGING="${STAGING:-/home/customer/tmp/ambur-deploy}"
 
 DRY=""
-[ "${1:-}" = "--dry" ] && DRY="--dry-run"
-
-# --delete must never reach these: ACME writes into .well-known during
-# certificate renewal, and the rest are SiteGround's own, not ours to remove.
-EXCLUDES="--exclude=.well-known/ --exclude=cgi-bin/ --exclude=.htpasswd --exclude=.user.ini"
+[ "${1:-}" = "--dry" ] && DRY="1"
 
 echo "==> Building static export"
 npm run build
@@ -39,7 +40,44 @@ tar -czf - -C out . |
   ssh "$SSH_HOST" "rm -rf '$STAGING' && mkdir -p '$STAGING' && tar -xzf - -C '$STAGING'"
 
 echo "==> Syncing into ${REMOTE_ROOT}${DRY:+  (dry run — nothing written)}"
-ssh "$SSH_HOST" "mkdir -p '$REMOTE_ROOT' && rsync -av --delete $DRY $EXCLUDES '$STAGING/' '$REMOTE_ROOT/'"
+ssh "$SSH_HOST" "STAGING='$STAGING' REMOTE_ROOT='$REMOTE_ROOT' DRY='$DRY' sh -s" <<'REMOTE'
+set -eu
+mkdir -p "$REMOTE_ROOT"
+
+# Paths --delete must never touch: ACME writes into .well-known during
+# certificate renewal, and the rest are SiteGround's own, not ours to remove.
+keep() {
+  case "$1" in
+    ./.well-known|./.well-known/*|./cgi-bin|./cgi-bin/*|./.htpasswd|./.user.ini)
+      return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# Remove anything the new build no longer contains, deepest first so a
+# directory is only considered once its contents are gone.
+cd "$REMOTE_ROOT"
+find . -mindepth 1 -depth | while IFS= read -r p; do
+  if keep "$p"; then
+    continue
+  fi
+  if [ -e "$STAGING/$p" ] || [ -L "$STAGING/$p" ]; then
+    continue
+  fi
+  if [ -n "$DRY" ]; then
+    echo "would delete $p"
+  else
+    rm -rf -- "$p"
+  fi
+done
+
+if [ -n "$DRY" ]; then
+  echo "would copy $(find "$STAGING" -type f | wc -l) files into $REMOTE_ROOT"
+else
+  cp -a "$STAGING/." "$REMOTE_ROOT/"
+  echo "copied $(find "$REMOTE_ROOT" -type f | wc -l) files into place"
+fi
+REMOTE
 
 if [ -n "$DRY" ]; then
   echo "==> Dry run finished. Staging left at $STAGING for inspection."
