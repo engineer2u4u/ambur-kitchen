@@ -20,31 +20,31 @@ export const SIGNATURES: Signature[] = [
     img: "/images/sig-biryani.jpg",
   },
   {
-    n: "Seeraga Samba Chicken Biryani",
-    tag: "AMBUR ORIGINAL",
-    p: "19",
-    d: "Tiny, intensely fragrant seeraga samba rice — the true Ambur way. A rice so aromatic it needs no saffron, with aubergine curry and raita.",
+    n: "Crunchy Fish Fry",
+    tag: "FROM THE COAST",
+    p: "15",
+    d: "Whole fish scored to the bone, packed with a dark chilli-pepper masala and fried until the crust shatters. Served on banana leaf with lime, onion and chutney.",
     dShort:
-      "Tiny, intensely fragrant seeraga samba rice — the true Ambur way. So aromatic it needs no saffron.",
-    img: "/images/sig-seeraga.jpg",
+      "Whole fish scored to the bone, packed with dark chilli masala and fried until the crust shatters.",
+    img: "/images/sig-fish-fry.jpg",
   },
   {
-    n: "Ambur Mutton Paya",
-    tag: "SUNDAY RITUAL",
-    p: "22",
-    d: "Trotters simmered overnight into a silky, peppery broth. Mopped up with appam, Malabar parotta or idiyappam — the breakfast of champions.",
+    n: "Malabar Parotta & Chicken Salna",
+    tag: "STREET CLASSIC",
+    p: "15",
+    d: "Hand-slapped parotta pulled into a hundred layers, torn and dipped into a fiery chicken salna. The taste of a Tamil Nadu highway at midnight.",
     dShort:
-      "Trotters simmered overnight into a silky, peppery broth. Mopped up with appam or Malabar parotta.",
-    img: "/images/sig-paya.jpg",
+      "Hand-slapped parotta pulled into a hundred layers, torn and dipped into a fiery chicken salna.",
+    img: "/images/sig-parotta-salna.jpg",
   },
   {
-    n: "Ghee Podi Masala Dosa",
-    tag: "CROWD FAVOURITE",
+    n: "Minced Mutton Egg Roll",
+    tag: "TAWA FAVOURITE",
     p: "12",
-    d: "Ghee-roasted until lace-crisp, dusted with gunpowder podi, wrapped around spiced potato. Unreasonably good.",
+    d: "Spiced mutton keema and egg scrambled together on the tawa, rolled hot into a flaky parotta. Built to be eaten standing up.",
     dShort:
-      "Ghee-roasted until lace-crisp, dusted with gunpowder podi, wrapped around spiced potato.",
-    img: "/images/sig-dosa.jpg",
+      "Spiced mutton keema and egg scrambled on the tawa, rolled hot into a flaky parotta.",
+    img: "/images/sig-keema-roll.jpg",
   },
 ];
 
