@@ -19,9 +19,9 @@ export const colors = {
 export const restaurant = {
   name: "THE AMBUR KITCHEN",
   tagline: "SOUL OF INDIAN CUISINE",
-  street: "Hooikade",
+  street: "52 Hooikade",
   postal: "2514 BK Den Haag, Netherlands",
-  addressLine: "Hooikade, 2514 BK Den Haag, Netherlands",
+  addressLine: "52 Hooikade, 2514 BK Den Haag, Netherlands",
   phone: "+31 70 887 7990",
   phoneHref: "tel:+31708877990",
   email: "hello@theamburkitchen.nl",
