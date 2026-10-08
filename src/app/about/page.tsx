@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MenuLink from "@/components/MenuLink";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { colors, cream, goldA } from "@/lib/theme";
@@ -195,7 +195,8 @@ export default function AboutPage() {
               eat like royalty here too: gunpowder idlis, ghee podi dosas and
               kurumas rich with coconut and cashew.
             </p>
-            <MenuLink
+            <Link
+              href="/menu"
               style={{
                 display: "inline-block",
                 marginTop: 26,
@@ -206,7 +207,7 @@ export default function AboutPage() {
               }}
             >
               SEE THE FULL MENU →
-            </MenuLink>
+            </Link>
           </div>
           {framedImage("/images/about-2.jpg")}
         </section>

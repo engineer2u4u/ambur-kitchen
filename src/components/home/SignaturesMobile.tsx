@@ -1,7 +1,8 @@
 "use client";
 
-import MenuLink from "@/components/MenuLink";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useLang, pick } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
 import { SIGNATURES } from "@/lib/signatures";
 import { useIsMobile } from "@/hooks/useMediaQuery";
@@ -12,6 +13,7 @@ const AUTO_MS = 4000;
 const RESUME_MS = 8000;
 
 export default function SignaturesMobile() {
+  const { lang } = useLang();
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const isMobile = useIsMobile();
@@ -160,7 +162,7 @@ export default function SignaturesMobile() {
                   color: colors.gold,
                 }}
               >
-                {s.tag}
+                {pick(lang, s.tag, s.tagNl)}
               </div>
               <h3
                 style={{
@@ -184,9 +186,10 @@ export default function SignaturesMobile() {
                   textWrap: "pretty",
                 }}
               >
-                {s.dShort}
+                {pick(lang, s.dShort, s.nlShort)}
               </p>
-              <MenuLink
+              <Link
+                href="/menu"
                 style={{
                   display: "inline-block",
                   marginTop: 14,
@@ -197,7 +200,7 @@ export default function SignaturesMobile() {
                 }}
               >
                 FIND IT ON THE MENU →
-              </MenuLink>
+              </Link>
             </div>
           </article>
         ))}

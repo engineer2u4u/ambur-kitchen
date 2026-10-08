@@ -1,7 +1,8 @@
 "use client";
 
-import MenuLink from "@/components/MenuLink";
+import Link from "next/link";
 import { useState } from "react";
+import { useLang, pick } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
 import { CHAPTERS } from "@/lib/signatures";
 import Reveal from "@/components/Reveal";
@@ -10,6 +11,7 @@ import Reveal from "@/components/Reveal";
 const DEFAULT_OPEN = 3;
 
 export default function Chapters() {
+  const { lang } = useLang();
   const [active, setActive] = useState(DEFAULT_OPEN);
 
   return (
@@ -95,7 +97,7 @@ export default function Chapters() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {c.name}
+                  {pick(lang, c.name, c.nameNl)}
                 </span>
               </div>
               <div
@@ -111,22 +113,24 @@ export default function Chapters() {
                 }}
               >
                 <span>
-                  {c.count} DISHES
+                  {c.count} {lang === "nl" ? "GERECHTEN" : "DISHES"}
                   <span className="ch-arrow"> →</span>
                 </span>
-                <MenuLink
+                <Link
+                  href="/menu"
                   className="ch-open"
                   style={{ letterSpacing: "2px" }}
                 >
-                  OPEN CHAPTER →
-                </MenuLink>
+                  {lang === "nl" ? "OPEN HOOFDSTUK →" : "OPEN CHAPTER →"}
+                </Link>
               </div>
             </div>
 
             {/* Desktop makes the whole panel a link; mobile taps to expand. */}
-            <MenuLink
+            <Link
+              href="/menu"
               className="chapter-hit"
-              ariaLabel={`${c.name} — ${c.count} dishes`}
+              aria-label={`${c.name} — ${c.count} dishes`}
               tabIndex={-1}
             />
           </div>

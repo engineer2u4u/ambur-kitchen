@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MenuBrowser from "@/components/menu/MenuBrowser";
+import MenuIntro from "@/components/menu/MenuIntro";
 import { colors, cream, goldA } from "@/lib/theme";
 import { MENU, TOTAL_DISHES } from "@/lib/menu";
 
@@ -112,6 +113,7 @@ export default function MenuPage() {
         />
       </section>
 
+      <MenuIntro />
       <MenuBrowser />
       <Footer />
     </div>

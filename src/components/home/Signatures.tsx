@@ -1,13 +1,15 @@
 "use client";
 
-import MenuLink from "@/components/MenuLink";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLang, pick } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
 import { SIGNATURES, SIG_ROTATE_MS } from "@/lib/signatures";
 import { useTilt } from "@/hooks/useTilt";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
 export default function Signatures() {
+  const { lang } = useLang();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const tilt = useTilt(10);
@@ -160,7 +162,7 @@ export default function Signatures() {
           {pad(index + 1)}
         </div>
         <div style={{ fontSize: 11.5, letterSpacing: "4px", color: colors.gold }}>
-          {cur.tag}
+          {pick(lang, cur.tag, cur.tagNl)}
         </div>
         <h3
           style={{
@@ -184,9 +186,10 @@ export default function Signatures() {
             textWrap: "pretty",
           }}
         >
-          {cur.d}
+          {pick(lang, cur.d, cur.nl)}
         </p>
-        <MenuLink
+        <Link
+          href="/menu"
           style={{
             display: "inline-block",
             marginTop: 24,
@@ -197,7 +200,7 @@ export default function Signatures() {
           }}
         >
           FIND IT ON THE MENU →
-        </MenuLink>
+        </Link>
 
         <div style={{ display: "flex", gap: 12, marginTop: 36 }}>
           {SIGNATURES.map((s, i) => (

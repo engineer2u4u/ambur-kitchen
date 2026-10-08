@@ -55,6 +55,42 @@ textarea::placeholder {
   display: none;
 }
 
+/*
+ * Scrollbars, in the site's own gold-on-navy rather than the browser's grey.
+ * Applied globally so the page, the menu sidebar and the allergen modal all
+ * match; [data-snap] above still opts out.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(192, 134, 61, 0.45) rgba(8, 16, 32, 0.6);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(8, 16, 32, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(192, 134, 61, 0.45);
+  /* Padding-box with a transparent border leaves a gap either side of the
+     thumb, so it reads as a slim rail rather than a full-width block. */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(192, 134, 61, 0.75);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* ---------- Animations ---------- */
 @keyframes kenburns {
   from {
@@ -1028,6 +1064,373 @@ input.form-field[type="time"] {
   .only-mobile {
     display: none !important;
   }
+}
+
+/* ==========================================================================
+   Dish badges and allergen chips
+   ========================================================================== */
+
+.dish-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.dish-tags:empty {
+  display: none;
+}
+
+.dish-tags > span {
+  font-size: 9.5px;
+  letter-spacing: 1.2px;
+  line-height: 1;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+
+.tag-vegan {
+  color: var(--veg, #7fb069);
+  border: 1px solid rgba(127, 176, 105, 0.5);
+}
+
+.tag-chef {
+  color: var(--gold-light);
+  border: 1px solid rgba(192, 134, 61, 0.45);
+}
+
+/* Chilli count. Red enough to read as heat without shouting. */
+.tag-spice {
+  color: #d9704f;
+  letter-spacing: 1px;
+  border: 1px solid rgba(217, 112, 79, 0.4);
+}
+
+/* Day-limited dishes: sits under the price badge on the photo. */
+.dish-days {
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  left: 8px;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 4px 7px;
+  color: var(--navy);
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  font-weight: 600;
+}
+
+.dish-allergens {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+/*
+ * Icon only — the number was noise, and at 14px inside a bordered chip these
+ * thin-stroke marks were unreadable. Bigger, full opacity, no box.
+ */
+.allergen-ico {
+  display: inline-flex;
+  cursor: help;
+}
+
+.allergen-ico img {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+/* The compact mobile row and the narrow list row have no space for these. */
+.dish-card[data-mv="compact"] .dish-allergens,
+.dish-card[data-dv="list"] .dish-allergens {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .dish-allergens {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Allergen detail on hover — sits over the photo so it is never clipped
+   ========================================================================== */
+
+/*
+ * Follows the cursor, flipping to its left near the right edge. Fixed to the
+ * viewport and portalled to <body>; JS writes left/top on every mousemove.
+ */
+.alg-pop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 150;
+  width: 250px;
+  padding: 12px 14px;
+  pointer-events: none;
+  background: rgba(8, 16, 32, 0.97);
+  border: 1px solid rgba(192, 134, 61, 0.45);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.6);
+  animation: soonFade 0.14s ease both;
+}
+
+.alg-pop-head {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+}
+
+.alg-pop-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--cream);
+  padding: 3px 0;
+}
+
+.alg-pop-row img {
+  flex: none;
+  opacity: 0.95;
+}
+
+/* Pointer-driven, so it has no place on a touch screen. */
+@media (hover: none) {
+  .alg-pop {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Menu intro — the kitchen's standing notices, above the dishes
+   ========================================================================== */
+
+.menu-intro {
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 10px 48px 0;
+}
+
+.menu-intro-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  border: 1px solid rgba(192, 134, 61, 0.22);
+  background: rgba(14, 27, 54, 0.5);
+  padding: 22px 26px;
+}
+
+/* Certification mark: keeps its own light ground, as such marks must. */
+.halal-mark {
+  flex: none;
+  width: 88px;
+  height: auto;
+  align-self: center;
+  border-radius: 4px;
+}
+
+.menu-intro-main {
+  flex: 1 1 380px;
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  .halal-mark {
+    width: 66px;
+  }
+}
+
+.alg-open-btn {
+  flex: none;
+  align-self: center;
+  padding: 12px 22px;
+  font-family: inherit;
+  font-size: 11.5px;
+  letter-spacing: 2.5px;
+  color: var(--gold-light);
+  background: transparent;
+  border: 1px solid rgba(192, 134, 61, 0.5);
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.alg-open-btn:hover {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--navy);
+}
+
+/* ==========================================================================
+   Allergen guide modal — the full reference, with large icons
+   ========================================================================== */
+
+.alg-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 12, 26, 0.84);
+  backdrop-filter: blur(6px);
+  animation: soonFade 0.35s ease both;
+}
+
+.alg-modal {
+  position: relative;
+  width: min(900px, 100%);
+  max-height: min(86vh, 900px);
+  overflow-y: auto;
+  padding: 42px 40px 34px;
+  border: 1px solid rgba(192, 134, 61, 0.42);
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      rgba(192, 134, 61, 0.14),
+      transparent 65%
+    ),
+    var(--navy-panel);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  animation: soonRise 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.alg-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(242, 236, 223, 0.5);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.alg-close:hover {
+  color: var(--gold-light);
+}
+
+.alg-title {
+  font-family: var(--font-cormorant), serif;
+  font-size: 38px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--cream);
+}
+
+.alg-intro {
+  max-width: 620px;
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--cream);
+  text-wrap: pretty;
+}
+
+.alg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 26px 20px;
+  margin-top: 32px;
+}
+
+.alg-item {
+  text-align: center;
+}
+
+.alg-item img {
+  width: 56px;
+  height: 56px;
+  opacity: 0.95;
+}
+
+.alg-no {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(192, 134, 61, 0.85);
+  margin-top: 6px;
+}
+
+.alg-name {
+  font-size: 13.5px;
+  color: var(--cream);
+  margin-top: 2px;
+  text-wrap: pretty;
+}
+
+.alg-includes {
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--cream);
+  margin-top: 4px;
+  text-wrap: pretty;
+}
+
+.alg-traces {
+  margin: 34px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(192, 134, 61, 0.2);
+  font-size: 12.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--cream);
+  text-wrap: pretty;
+}
+
+@media (max-width: 700px) {
+  .alg-modal {
+    padding: 36px 20px 26px;
+  }
+
+  .alg-title {
+    font-size: 30px;
+  }
+
+  .alg-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 22px 14px;
+  }
+
+  .alg-item img {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+.kitchen-note {
+  font-size: 12.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--cream);
+  max-width: 760px;
+  text-wrap: pretty;
+}
+
+.halal-badge {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 9px 16px;
+  font-size: 11.5px;
+  letter-spacing: 2.5px;
+  color: var(--gold-light);
+  border: 1px solid rgba(192, 134, 61, 0.45);
 }
 
 /* ==========================================================================

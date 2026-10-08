@@ -1,11 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import { createPortal } from "react-dom";
 import { MENU, type MenuItem } from "@/lib/menu";
+import { ALLERGEN_BY_NO } from "@/lib/allergens";
+import { useLang, pick, t, type Lang } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
 import { useTilt } from "@/hooks/useTilt";
 
-type Diet = "all" | "veg" | "nonveg";
+type Diet = "all" | "veg" | "vegan" | "nonveg";
 type DesktopView = "grid" | "list";
 type MobileView = "photo" | "compact";
 
@@ -13,10 +24,12 @@ const HEADER_OFFSET = 104;
 /** Mobile header + sticky chip row. */
 const MOBILE_OFFSET = 148;
 
-const DIETS: [Diet, string, string][] = [
-  ["all", "ALL", colors.goldLight],
-  ["veg", "VEG", colors.veg],
-  ["nonveg", "NON-VEG", colors.nonVeg],
+/** Filter key doubles as the UI copy key in LanguageProvider. */
+const DIETS: [Diet, string][] = [
+  ["all", colors.goldLight],
+  ["veg", colors.veg],
+  ["vegan", colors.veg],
+  ["nonveg", colors.nonVeg],
 ];
 
 const sectionId = (cat: string) =>
@@ -24,6 +37,15 @@ const sectionId = (cat: string) =>
 
 /** Some dishes aren't priced yet — show that rather than a bare euro sign. */
 const priceLabel = (p: string) => (p ? `€ ${p}` : "TBC");
+
+const matchesDiet = (it: MenuItem, diet: Diet) =>
+  diet === "all"
+    ? true
+    : diet === "veg"
+      ? it.veg
+      : diet === "vegan"
+        ? it.vegan
+        : !it.veg;
 
 /** Segmented-control button, used by the desktop sidebar toggles. */
 function seg(active: boolean): CSSProperties {
@@ -80,24 +102,67 @@ function DishCard({
   mobileView,
   animation,
   delay,
+  lang,
 }: {
   item: MenuItem;
   desktopView: DesktopView;
   mobileView: MobileView;
   animation: string;
   delay: number;
+  lang: Lang;
 }) {
   const tilt = useTilt(9);
   const dotColor = item.veg ? colors.veg : colors.nonVeg;
-  const dietLabel = item.veg ? "Vegetarian" : "Non-vegetarian";
+  const dietLabel = item.veg ? t(lang, "vegetarian") : t(lang, "nonVegetarian");
+
+  const [tipOpen, setTipOpen] = useState(false);
+  const tipRef = useRef<HTMLDivElement>(null);
+  const cursor = useRef({ x: 0, y: 0 });
+  const hasAllergens = item.a.length > 0;
+
+  /**
+   * Position the popover beside the cursor, flipping to the left and clamping
+   * vertically so it never leaves the viewport. Written straight to the node:
+   * re-rendering on every mousemove would fight the tilt handler.
+   */
+  const place = useCallback(() => {
+    const el = tipRef.current;
+    if (!el) return;
+    const { x, y } = cursor.current;
+    const gap = 18;
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    const left =
+      x + gap + w > window.innerWidth - 8 ? Math.max(8, x - gap - w) : x + gap;
+    const top = Math.min(Math.max(8, y - h / 2), window.innerHeight - h - 8);
+    el.style.left = left + "px";
+    el.style.top = top + "px";
+  }, []);
+
+  useLayoutEffect(() => {
+    if (tipOpen) place();
+  }, [tipOpen, place]);
+
+  const onMove = (e: React.MouseEvent<HTMLElement>) => {
+    cursor.current = { x: e.clientX, y: e.clientY };
+    if (tipOpen) place();
+    if (desktopView === "grid") tilt.onMouseMove(e);
+  };
 
   return (
     <article
       className="dish-card"
       data-dv={desktopView}
       data-mv={mobileView}
-      onMouseMove={desktopView === "grid" ? tilt.onMouseMove : undefined}
-      onMouseLeave={desktopView === "grid" ? tilt.onMouseLeave : undefined}
+      onMouseMove={onMove}
+      onMouseEnter={(e) => {
+        cursor.current = { x: e.clientX, y: e.clientY };
+        if (hasAllergens) setTipOpen(true);
+      }}
+      onMouseLeave={(e) => {
+        setTipOpen(false);
+        if (desktopView === "grid") tilt.onMouseLeave(e);
+      }}
       style={{ animation: `${animation} .5s ${delay}s both` }}
     >
       <div
@@ -112,6 +177,8 @@ function DishCard({
           style={{ background: dotColor }}
         />
         <span className="dish-price-badge">{priceLabel(item.p)}</span>
+        {item.days && <span className="dish-days">{item.days}</span>}
+
       </div>
 
       <div className="dish-body">
@@ -124,13 +191,84 @@ function DishCard({
           />
           <span className="dish-price-inline">{priceLabel(item.p)}</span>
         </div>
-        <p className="dish-desc">{item.d}</p>
+
+        <div className="dish-tags">
+          {item.vegan && <span className="tag-vegan">{t(lang, "vegan")}</span>}
+          {item.chef && (
+            <span className="tag-chef" title={t(lang, "chefsSpecial")}>
+              ◆ {t(lang, "chefsSpecial")}
+            </span>
+          )}
+          {item.spice > 0 && (
+            <span
+              className="tag-spice"
+              title={`${t(lang, "spice")} ${item.spice}/3`}
+              aria-label={`${t(lang, "spice")} ${item.spice} ${t(lang, "of")} 3`}
+            >
+              {"▲".repeat(item.spice)}
+            </span>
+          )}
+        </div>
+
+        <p className="dish-desc">{pick(lang, item.d, item.nl)}</p>
+
+        {item.a.length > 0 && (
+          <div className="dish-allergens" aria-label={t(lang, "contains")}>
+            {item.a.map((no) => {
+              const al = ALLERGEN_BY_NO.get(no);
+              if (!al) return null;
+              return (
+                <span
+                  key={no}
+                  className="allergen-ico"
+                  title={pick(lang, al.en, al.nl)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={al.icon}
+                    alt={pick(lang, al.en, al.nl)}
+                    width={22}
+                    height={22}
+                  />
+                </span>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      {/*
+       * Portalled to <body>: in grid view the tilt handler puts a transform on
+       * this card, which would make it the containing block for position:fixed
+       * and pin the popover inside the card instead of beside the cursor.
+       */}
+      {tipOpen &&
+        hasAllergens &&
+        createPortal(
+          <div className="alg-pop" ref={tipRef} role="tooltip">
+            <div className="alg-pop-head">
+              {t(lang, "contains").toUpperCase()}
+            </div>
+            {item.a.map((no) => {
+              const al = ALLERGEN_BY_NO.get(no);
+              if (!al) return null;
+              return (
+                <div className="alg-pop-row" key={no}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={al.icon} alt="" aria-hidden width={24} height={24} />
+                  <span>{pick(lang, al.en, al.nl)}</span>
+                </div>
+              );
+            })}
+          </div>,
+          document.body,
+        )}
     </article>
   );
 }
 
 export default function MenuBrowser() {
+  const { lang } = useLang();
   const [cat, setCat] = useState("All");
   const [diet, setDiet] = useState<Diet>("all");
   const [desktopView, setDesktopView] = useState<DesktopView>("grid");
@@ -187,9 +325,7 @@ export default function MenuBrowser() {
         .filter((g) => cat === "All" || g.cat === cat)
         .map((g) => ({
           ...g,
-          items: g.items.filter(
-            (it) => diet === "all" || (diet === "veg" ? it.veg : !it.veg),
-          ),
+          items: g.items.filter((it) => matchesDiet(it, diet)),
         }))
         .filter((g) => g.items.length > 0),
     [cat, diet],
@@ -340,6 +476,13 @@ export default function MenuBrowser() {
             flex: "none",
             flexDirection: "column",
             gap: 26,
+            /*
+             * Twelve chapters plus the filters outgrow the viewport, and a
+             * sticky box never scrolls with the page — so it scrolls itself.
+             */
+            maxHeight: `calc(100vh - ${HEADER_OFFSET + 28}px)`,
+            overflowY: "auto",
+            paddingRight: 8,
           }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -424,14 +567,14 @@ export default function MenuBrowser() {
                 backdropFilter: "blur(8px)",
               }}
             >
-              {DIETS.map(([key, label]) => (
+              {DIETS.map(([key]) => (
                 <button
                   key={key}
                   onClick={() => changeDiet(key)}
                   aria-pressed={diet === key}
                   style={seg(diet === key)}
                 >
-                  {label}
+                  {t(lang, key)}
                 </button>
               ))}
             </div>
@@ -485,8 +628,8 @@ export default function MenuBrowser() {
             }}
           >
             {[
-              ["Vegetarian", colors.veg],
-              ["Non-vegetarian", colors.nonVeg],
+              [t(lang, "vegetarian"), colors.veg],
+              [t(lang, "nonVegetarian"), colors.nonVeg],
             ].map(([label, col], i) => (
               <div
                 key={label}
@@ -577,7 +720,7 @@ export default function MenuBrowser() {
                       margin: 0,
                     }}
                   >
-                    {g.cat}
+                    {pick(lang, g.cat, g.catNl)}
                   </h2>
                   <div
                     style={{
@@ -600,7 +743,7 @@ export default function MenuBrowser() {
                       textWrap: "pretty",
                     }}
                   >
-                    {g.note}
+                    {pick(lang, g.note, g.noteNl ?? "")}
                   </p>
                 )}
 
@@ -617,6 +760,7 @@ export default function MenuBrowser() {
                       mobileView={mobileView}
                       animation={animation}
                       delay={Math.min(n++ * 0.04, 0.4)}
+                      lang={lang}
                     />
                   ))}
                 </div>
@@ -701,7 +845,7 @@ export default function MenuBrowser() {
               color: cream(0.65),
             }}
           >
-            {shown} / {total} DISHES
+            {shown} / {total} {t(lang, "dishes").toUpperCase()}
           </span>
           <span
             style={{
@@ -737,7 +881,7 @@ export default function MenuBrowser() {
             // DIET
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            {DIETS.map(([key, label, col]) => (
+            {DIETS.map(([key, col]) => (
               <button
                 key={key}
                 onClick={() => changeDiet(key)}
@@ -754,7 +898,7 @@ export default function MenuBrowser() {
                     boxShadow: diet === key ? "none" : `0 0 8px ${col}66`,
                   }}
                 />
-                {label}
+                {t(lang, key)}
               </button>
             ))}
           </div>

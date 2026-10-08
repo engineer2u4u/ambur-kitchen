@@ -1,5 +1,4 @@
 import Link from "next/link";
-import MenuLink from "@/components/MenuLink";
 import Image from "next/image";
 import { colors, cream, goldA } from "@/lib/theme";
 
@@ -138,7 +137,8 @@ export default function Hero() {
             flexWrap: "wrap",
           }}
         >
-          <MenuLink
+          <Link
+            href="/menu"
             className="btn-primary"
             style={{
               background: `linear-gradient(135deg,${colors.goldLight},${colors.gold})`,
@@ -150,7 +150,7 @@ export default function Hero() {
             }}
           >
             EXPLORE THE MENU
-          </MenuLink>
+          </Link>
           <Link
             href="/contact#reserve"
             className="btn-ghost"

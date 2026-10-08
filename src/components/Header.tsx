@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
-import MenuLink from "@/components/MenuLink";
+import { useLang, type Lang } from "@/lib/LanguageProvider";
 import { colors, cream, goldA, restaurant } from "@/lib/theme";
 
 const NAV = [
@@ -14,9 +14,60 @@ const NAV = [
   { href: "/contact", label: "CONTACT" },
 ];
 
+/** EN | NL switch. Shares one look between the desktop bar and the drawer. */
+function LangSwitch({ size = 11.5 }: { size?: number }) {
+  const { lang, setLang } = useLang();
+  const opt = (l: Lang): CSSProperties => ({
+    fontSize: size,
+    letterSpacing: "1.5px",
+    padding: "4px 8px",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    fontFamily: "inherit",
+    color: lang === l ? colors.goldLight : cream(0.45),
+    fontWeight: lang === l ? 600 : 400,
+  });
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        border: `1px solid ${goldA(0.3)}`,
+        flex: "none",
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => setLang("en")}
+        aria-pressed={lang === "en"}
+        style={opt("en")}
+      >
+        EN
+      </button>
+      <span aria-hidden style={{ color: goldA(0.4), fontSize: size - 1 }}>
+        |
+      </span>
+      <button
+        type="button"
+        onClick={() => setLang("nl")}
+        aria-pressed={lang === "nl"}
+        style={opt("nl")}
+      >
+        NL
+      </button>
+    </div>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  // Only the menu is translated, so the switch only appears there.
+  // trailingSlash is on, so the path arrives as "/menu/".
+  const onMenu = pathname === "/menu" || pathname === "/menu/";
 
   // Lock the page behind the overlay, and always release the lock on unmount.
   useEffect(() => {
@@ -113,26 +164,16 @@ export default function Header() {
             fontWeight: 400,
           }}
         >
-          {NAV.map((item) =>
-            item.href === "/menu" ? (
-              <MenuLink
-                key={item.href}
-                className="nav-link"
-                style={desktopLink(item.href)}
-              >
-                {item.label}
-              </MenuLink>
-            ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="nav-link"
-                style={desktopLink(item.href)}
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="nav-link"
+              style={desktopLink(item.href)}
+            >
+              {item.label}
+            </Link>
+          ))}
           <Link
             href="/contact#reserve"
             style={{
@@ -145,6 +186,7 @@ export default function Header() {
           >
             RESERVE
           </Link>
+          {onMenu && <LangSwitch />}
         </nav>
 
         <button
@@ -254,15 +296,7 @@ export default function Header() {
             </>
           );
 
-          return item.href === "/menu" ? (
-            <MenuLink
-              key={item.href}
-              style={rowStyle}
-              onClose={() => setOpen(false)}
-            >
-              {row}
-            </MenuLink>
-          ) : (
+          return (
             <Link
               key={item.href}
               href={item.href}
@@ -293,6 +327,20 @@ export default function Header() {
         >
           RESERVE A TABLE
         </Link>
+
+        {onMenu && (
+          <div
+            style={{
+              marginTop: 20,
+              display: "flex",
+              justifyContent: "center",
+              opacity: open ? 1 : 0,
+              transition: "opacity .5s .48s ease",
+            }}
+          >
+            <LangSwitch size={13} />
+          </div>
+        )}
 
         <div
           style={{
