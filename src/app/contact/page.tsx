@@ -18,12 +18,6 @@ const HOURS: [string, string, boolean?][] = [
 const MAP_EMBED =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2451.6343156671223!2d4.309501076991126!3d52.08638646824203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b73978a3d209%3A0x916d4964403bd793!2sKrishna%20Vilas%20Den%20Haag%20-%20Indian%20Vegetarian%2FVegan%20restaurant!5e0!3m2!1sen!2sin!4v1786734749888!5m2!1sen!2sin";
 
-const ORDER_LINKS = [
-  { label: "THUISBEZORGD", href: "#" },
-  { label: "UBER EATS", href: "#" },
-  { label: "CALL TO ORDER", href: restaurant.phoneHref },
-];
-
 const panelStyle = {
   border: `1px solid ${goldA(0.22)}`,
   background: colors.navyPanel,
@@ -178,10 +172,9 @@ export default function ContactPage() {
 
             <div
               id="order"
-              className="contact-panel soon-wrap"
+              className="contact-panel"
               style={{ ...panelStyle, scrollMarginTop: 104 }}
             >
-              <SoonVeil note="Takeaway ordering opens when our doors do." />
               <h2
                 className="contact-panel-title"
                 style={{ ...panelHeading, margin: "0 0 8px" }}
@@ -190,35 +183,49 @@ export default function ContactPage() {
               </h2>
               <p
                 style={{
-                  margin: "0 0 18px",
+                  margin: "0 0 20px",
                   fontWeight: 300,
                   fontSize: 14.5,
+                  lineHeight: 1.6,
                   color: cream(0.65),
                 }}
               >
-                Biryani travels well. Order for pickup or delivery:
+                Biryani travels well. Call us directly to order for pickup —
+                we take orders on the phone during opening hours.
               </p>
-              <div
-                className="order-links"
-                style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
+
+              {/* The phone is the order channel, so give it the whole panel. */}
+              <a
+                href={restaurant.phoneHref}
+                className="order-call"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 12,
+                  background: `linear-gradient(135deg,${colors.goldLight},${colors.gold})`,
+                  color: colors.navy,
+                  padding: "15px 26px",
+                  fontSize: 17,
+                  fontWeight: 600,
+                  letterSpacing: "0.5px",
+                }}
               >
-                {ORDER_LINKS.map((l) => (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    className="btn-ghost"
-                    style={{
-                      border: `1px solid ${goldA(0.5)}`,
-                      color: colors.goldLight,
-                      padding: "12px 22px",
-                      fontSize: 12.5,
-                      letterSpacing: "2px",
-                    }}
-                  >
-                    {l.label}
-                  </a>
-                ))}
-              </div>
+                <span aria-hidden style={{ fontSize: 15 }}>
+                  ☎
+                </span>
+                {restaurant.phone}
+              </a>
+
+              <p
+                style={{
+                  margin: "14px 0 0",
+                  fontSize: 12.5,
+                  fontWeight: 300,
+                  color: cream(0.5),
+                }}
+              >
+                {restaurant.hoursShort}
+              </p>
             </div>
 
           </div>

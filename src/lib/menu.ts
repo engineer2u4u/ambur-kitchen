@@ -139,7 +139,7 @@ export const MENU: MenuGroup[] = [
       { n: "Dal Butter Fry", p: "15,00", veg: true, vegan: false, chef: false, spice: 1, a: [1, 7], img: "/images/dish/dal-butter-fry.jpg", d: "Yellow lentils tempered with butter, garlic and cumin.", nl: "Gele linzen met boter, knoflook en komijn." },
       { n: "Paneer Butter Masala", p: "17,00", veg: true, vegan: false, chef: false, spice: 1, a: [7, 8], img: "/images/dish/paneer-butter-masala.jpg", d: "Paneer in a rich, creamy tomato gravy.", nl: "Paneer in een rijke, romige tomatensaus." },
       { n: "Vegetable Kuruma", p: "16,00", veg: true, vegan: false, chef: false, spice: 1, a: [8], img: "/images/dish/vegetable-kuruma.jpg", d: "Vegetables in a fragrant coconut kuruma.", nl: "Groenten in geurige kokoskurma." },
-      { n: "Palak Paneer", p: "19,00", veg: true, vegan: false, chef: false, spice: 1, a: [7], img: "/images/dish/palak-paneer.jpg", d: "Paneer in silky, gently spiced spinach.", nl: "Paneer in zachte, mild gekruide spinazie." },
+      { n: "Palak Paneer", p: "16,00", veg: true, vegan: false, chef: false, spice: 1, a: [7], img: "/images/dish/palak-paneer.jpg", d: "Paneer in silky, gently spiced spinach.", nl: "Paneer in zachte, mild gekruide spinazie." },
       { n: "Dal Makhani", p: "16,00", veg: true, vegan: false, chef: false, spice: 0, a: [7], img: "/images/dish/dal-makhani.jpg", d: "Black lentils simmered overnight with butter and cream.", nl: "Zwarte linzen, een nacht lang gestoofd met boter en room." },
     ],
   },

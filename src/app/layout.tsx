@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
-import ComingSoonModal from "@/components/ComingSoonModal";
 import { LanguageProvider } from "@/lib/LanguageProvider";
 import "./globals.css";
 
@@ -35,10 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable}`}>
       <body>
-        <LanguageProvider>
-          {children}
-          <ComingSoonModal />
-        </LanguageProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
