@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ReservationForm from "@/components/contact/ReservationForm";
 import { colors, cream, goldA, restaurant } from "@/lib/theme";
 
 export const metadata: Metadata = {
@@ -11,7 +10,9 @@ export const metadata: Metadata = {
 };
 
 const HOURS: [string, string, boolean?][] = [
-  ["Mon – Fri", "17:00 – 22:00"],
+  ["Monday", "17:00 – 22:00"],
+  ["Tuesday", "Closed", true],
+  ["Wed – Fri", "17:00 – 22:00"],
   ["Sat – Sun", "12:00 – 22:00"],
 ];
 
@@ -30,18 +31,6 @@ const panelHeading = {
   fontWeight: 600,
   color: colors.goldLight,
 } as const;
-
-/** Hover/focus veil for the panels that aren't taking real bookings yet. */
-function SoonVeil({ note }: { note: string }) {
-  return (
-    <div className="soon-veil" aria-hidden>
-      <div className="soon-veil-title">COMING SOON</div>
-      <p className="soon-veil-note" style={{ margin: 0 }}>
-        {note}
-      </p>
-    </div>
-  );
-}
 
 export default function ContactPage() {
   return (
@@ -230,9 +219,50 @@ export default function ContactPage() {
 
           </div>
 
-          <div className="contact-form-col soon-wrap">
-            <ReservationForm />
-            <SoonVeil note="Reservations open when our doors do." />
+          <div className="contact-form-col">
+            <div
+              id="reserve"
+              className="reserve-panel"
+              style={{
+                border: `1px solid ${goldA(0.35)}`,
+                background: `radial-gradient(ellipse 80% 60% at 50% 0%,${goldA(
+                  0.08,
+                )},transparent 70%),${colors.navyPanel}`,
+                padding: "34px 30px 24px",
+                scrollMarginTop: 104,
+              }}
+            >
+              <h2
+                className="contact-panel-title"
+                style={{ ...panelHeading, margin: "0 0 6px" }}
+              >
+                Reserve a table
+              </h2>
+              <p
+                style={{
+                  margin: "0 0 22px",
+                  fontWeight: 300,
+                  fontSize: 14.5,
+                  color: cream(0.65),
+                }}
+              >
+                Book instantly through TheFork.
+              </p>
+
+              {/* TheFork's own booking widget — it handles the whole flow. */}
+              <iframe
+                src="https://widget.thefork.com/0377e022-e1da-4b57-ae44-405253543c16"
+                title={`Book a table at ${restaurant.name}`}
+                allow="payment *"
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  minHeight: 800,
+                  border: "none",
+                  display: "block",
+                }}
+              />
+            </div>
           </div>
         </div>
 
