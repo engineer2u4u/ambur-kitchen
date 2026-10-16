@@ -305,6 +305,82 @@ export default function MenuBrowser() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /*
+   * Honour /menu/#cat-… and /menu/#dish-… ourselves.
+   * Arriving from the home page is a client-side navigation: the router lands
+   * at the top, and by the time it looks for the hash this component has not
+   * rendered the target yet. So scroll once the sections exist, and again on
+   * the next frame in case the grid is still settling.
+   */
+  useEffect(() => {
+    /** True once the element sits where its scroll-margin says it should. */
+    const settled = (el: HTMLElement) => {
+      const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+      return Math.abs(el.getBoundingClientRect().top - margin) <= 4;
+    };
+
+    let cancel = () => {};
+
+    const go = () => {
+      cancel();
+      const id = decodeURIComponent(window.location.hash.replace("#", ""));
+      if (!id) return;
+
+      let stopped = false;
+      let frame = 0;
+      const started = performance.now();
+
+      // The moment the reader scrolls themselves, stop interfering.
+      const yield_ = () => {
+        stopped = true;
+      };
+      const opts = { passive: true, once: true } as const;
+      window.addEventListener("wheel", yield_, opts);
+      window.addEventListener("touchstart", yield_, opts);
+      window.addEventListener("keydown", yield_, { once: true });
+
+      /*
+       * Keep re-asserting for a beat rather than scrolling once. The router
+       * scrolls to the top of a newly navigated page on its own schedule, and
+       * dish images can still be settling the layout — a single scroll lands
+       * correctly and is then undone.
+       */
+      const tick = () => {
+        if (stopped) return;
+        const el = document.getElementById(id);
+        if (el && !settled(el)) {
+          // Explicitly instant: the stylesheet sets scroll-behavior: smooth on
+          // html, and "auto" defers to that — which would restart a smooth
+          // animation on every frame of this loop and never arrive.
+          el.scrollIntoView({ behavior: "instant", block: "start" });
+        }
+        if (performance.now() - started < 1200) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+
+      cancel = () => {
+        stopped = true;
+        cancelAnimationFrame(frame);
+        window.removeEventListener("wheel", yield_);
+        window.removeEventListener("touchstart", yield_);
+        window.removeEventListener("keydown", yield_);
+      };
+    };
+
+    // Landing goes straight there; a long smooth scroll from the top would
+    // just make the reader watch the whole menu go by.
+    go();
+
+    // Following a link to this page while already on it only changes the hash.
+    const onHash = () => go();
+    window.addEventListener("hashchange", onHash);
+
+    return () => {
+      cancel();
+      window.removeEventListener("hashchange", onHash);
+    };
+  }, []);
+
   // Keep the active chip in view as the reader scrolls.
   useEffect(() => {
     const row = chipRowRef.current;
