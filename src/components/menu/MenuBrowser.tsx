@@ -369,15 +369,31 @@ export default function MenuBrowser() {
 
     // Landing goes straight there; a long smooth scroll from the top would
     // just make the reader watch the whole menu go by.
+    let last = window.location.hash;
     go();
 
-    // Following a link to this page while already on it only changes the hash.
-    const onHash = () => go();
+    const onHash = () => {
+      last = window.location.hash;
+      go();
+    };
     window.addEventListener("hashchange", onHash);
+    window.addEventListener("popstate", onHash);
+
+    /*
+     * The router navigates with pushState, which does not fire hashchange. So
+     * a second chapter link, followed while already on this page, changes the
+     * URL and nothing else hears about it. Watching the hash directly catches
+     * that; the interval is cheap and lives only as long as the menu.
+     */
+    const watch = window.setInterval(() => {
+      if (window.location.hash !== last) onHash();
+    }, 250);
 
     return () => {
       cancel();
+      clearInterval(watch);
       window.removeEventListener("hashchange", onHash);
+      window.removeEventListener("popstate", onHash);
     };
   }, []);
 
