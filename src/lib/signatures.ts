@@ -1,4 +1,10 @@
-import { ALL_DISH_NAMES, MENU, dishId, sectionId } from "./menu";
+import {
+  ALL_DISH_NAMES,
+  MENU,
+  dishId,
+  sectionId,
+  type MenuGroup,
+} from "./menu";
 
 export type Signature = {
   n: string;
@@ -75,58 +81,54 @@ export const SIGNATURES: Signature[] = [
   },
 ];
 
-/** Chapter cards on the home page. Counts come from the menu, never retyped. */
-const CHAPTER_ART: Record<string, string> = {
-  Soups: "/images/ch-soup.jpg",
-  "Small Plates — Veg": "/images/ch-samosa.jpg",
-  "Small Plates — Non-veg": "/images/ch-thali.jpg",
-  "Combos & Meals": "/images/ch-thali.jpg",
-  "Biryani & Rice": "/images/ch-biryani.jpg",
-  "Curries — Non-veg": "/images/ch-curry.jpg",
-  "Curries — Veg": "/images/ch-curry.jpg",
-  Dosa: "/images/ch-dosa.jpg",
-  Rolls: "/images/ch-naan.jpg",
-  Breads: "/images/ch-naan.jpg",
-  "Kids' Menu": "/images/ch-samosa.jpg",
-  Desserts: "/images/ch-soup.jpg",
+/**
+ * Chapter cards: one per menu section, so the home page and the menu agree on
+ * what a chapter is. Name, Dutch name and count all come from the menu — only
+ * the cover photo is chosen here.
+ */
+const CHAPTER_COVER: Record<string, string> = {
+  Soups: "Rasam Soup",
+  "Small Plates — Veg": "Veg Sampler Platter",
+  "Small Plates — Non-veg": "Chicken 65",
+  "Combos & Meals": "Spl Ambur Non-veg Meals",
+  "Biryani & Rice": "Hyderabad Basmati Mutton Biryani",
+  "Curries — Non-veg": "Ambur Special Butter Chicken Masala",
+  "Curries — Veg": "Paneer Butter Masala",
+  Dosa: "Masala Dosa",
+  Rolls: "Minced Mutton Egg Roll",
+  Breads: "Tandoori Cheese Garlic Naan",
+  "Kids' Menu": "Kid's Meal",
+  Desserts: "Gulab Jamun (2 pcs)",
 };
 
-/**
- * Seven cards, so the twelve menu sections are merged where they split only by
- * diet — a reader browsing chapters does not need veg and non-veg apart.
- */
-const CHAPTER_MAP: [string, string, string[]][] = [
-  ["Soups", "Soepen", ["Soups"]],
-  [
-    "Small Plates",
-    "Kleine gerechten",
-    ["Small Plates — Veg", "Small Plates — Non-veg"],
-  ],
-  ["Special Platters", "Speciale schotels", ["Combos & Meals"]],
-  ["Biryani & Rice", "Biryani & rijst", ["Biryani & Rice"]],
-  [
-    "Special Curries",
-    "Speciale curry's",
-    ["Curries — Non-veg", "Curries — Veg"],
-  ],
-  ["Dosa & Rolls", "Dosa & rolletjes", ["Dosa", "Rolls"]],
-  ["Breads & Sweets", "Brood & zoet", ["Breads", "Kids' Menu", "Desserts"]],
-];
+/** Falls back to the section's first dish if the named cover ever goes. */
+const coverFor = (g: MenuGroup) => {
+  const wanted = CHAPTER_COVER[g.cat];
+  const hit = wanted ? g.items.find((i) => i.n === wanted) : undefined;
+  return (hit ?? g.items[0]).img;
+};
 
-const countOf = (sections: string[]) =>
-  MENU.filter((g) => sections.includes(g.cat)).reduce(
-    (n, g) => n + g.items.length,
-    0,
-  );
-
-export const CHAPTERS = CHAPTER_MAP.map(([name, nameNl, sections]) => ({
-  name,
-  nameNl,
-  count: countOf(sections),
-  img: CHAPTER_ART[sections[0]],
-  /** Where the card lands on the menu — the first section it covers. */
-  href: `/menu/#${sectionId(sections[0])}`,
+export const CHAPTERS = MENU.map((g) => ({
+  name: g.cat,
+  nameNl: g.catNl,
+  count: g.items.length,
+  img: coverFor(g),
+  href: `/menu/#${sectionId(g.cat)}`,
 }));
+
+/** Spelled out for the heading, so it cannot drift from the real count. */
+const NUMBER_WORDS = [
+  "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
+  "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
+];
+const NUMBER_WORDS_NL = [
+  "Nul", "Een", "Twee", "Drie", "Vier", "Vijf", "Zes", "Zeven", "Acht",
+  "Negen", "Tien", "Elf", "Twaalf", "Dertien", "Veertien", "Vijftien",
+];
+export const CHAPTER_COUNT_WORD =
+  NUMBER_WORDS[CHAPTERS.length] ?? String(CHAPTERS.length);
+export const CHAPTER_COUNT_WORD_NL =
+  NUMBER_WORDS_NL[CHAPTERS.length] ?? String(CHAPTERS.length);
 
 /**
  * Each signature must name a dish that still exists, or its "find it on the

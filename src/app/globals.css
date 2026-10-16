@@ -654,7 +654,7 @@ textarea::placeholder {
   .chapter-strip {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 6px;
     height: 440px;
   }
 
@@ -708,11 +708,12 @@ textarea::placeholder {
 }
 
 @media (max-width: 900px) {
+  /* Twelve chapters, so the stack is taller and each row a little shorter. */
   .chapter-strip {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    height: 720px;
+    gap: 6px;
+    height: 980px;
   }
 
   .chapter-panel {

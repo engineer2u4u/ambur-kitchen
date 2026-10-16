@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useLang, pick } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
-import { CHAPTERS } from "@/lib/signatures";
+import {
+  CHAPTERS,
+  CHAPTER_COUNT_WORD,
+  CHAPTER_COUNT_WORD_NL,
+} from "@/lib/signatures";
 import Reveal from "@/components/Reveal";
 
 /** Panel open by default on mobile, matching the mobile design. */
@@ -38,7 +42,9 @@ export default function Chapters() {
           color: colors.cream,
         }}
       >
-        Seven chapters of flavour
+        {lang === "nl"
+          ? `${CHAPTER_COUNT_WORD_NL} hoofdstukken vol smaak`
+          : `${CHAPTER_COUNT_WORD} chapters of flavour`}
       </h2>
       <p
         className="only-mobile"
