@@ -206,3 +206,23 @@ export const MENU: MenuGroup[] = [
 ];
 
 export const TOTAL_DISHES = MENU.reduce((sum, g) => sum + g.items.length, 0);
+
+/** Anchor id for a menu section, shared with the home-page chapter cards. */
+export const sectionId = (cat: string) =>
+  "cat-" + cat.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/**
+ * Anchor id for a dish, so the home page can link straight at it.
+ * Derived from the name on both sides rather than stored, so a renamed dish
+ * cannot leave a link pointing at an id that no longer exists.
+ */
+export const dishId = (name: string) =>
+  "dish-" +
+  name
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+/** Every dish name, for the build-time check that signature links resolve. */
+export const ALL_DISH_NAMES = MENU.flatMap((g) => g.items.map((i) => i.n));

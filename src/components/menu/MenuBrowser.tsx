@@ -10,7 +10,7 @@ import {
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
-import { MENU, type MenuItem } from "@/lib/menu";
+import { MENU, dishId, sectionId, type MenuItem } from "@/lib/menu";
 import { ALLERGEN_BY_NO } from "@/lib/allergens";
 import { useLang, pick, t, type Lang } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
@@ -31,9 +31,6 @@ const DIETS: [Diet, string][] = [
   ["vegan", colors.veg],
   ["nonveg", colors.nonVeg],
 ];
-
-const sectionId = (cat: string) =>
-  "cat-" + cat.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 /** Some dishes aren't priced yet — show that rather than a bare euro sign. */
 const priceLabel = (p: string) => (p ? `€ ${p}` : "TBC");
@@ -151,6 +148,7 @@ function DishCard({
 
   return (
     <article
+      id={dishId(item.n)}
       className="dish-card"
       data-dv={desktopView}
       data-mv={mobileView}

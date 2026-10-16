@@ -1,7 +1,9 @@
-import { MENU } from "./menu";
+import { ALL_DISH_NAMES, MENU, dishId, sectionId } from "./menu";
 
 export type Signature = {
   n: string;
+  /** Exact dish name in MENU, so the card can link at that dish. */
+  dish: string;
   tag: string;
   tagNl: string;
   p: string;
@@ -19,6 +21,7 @@ export type Signature = {
 export const SIGNATURES: Signature[] = [
   {
     n: "Seeraga Samba Mutton Biryani",
+    dish: "Ambur Spl Seeraga Samba Mutton Biryani with Aubergine Curry & Raita",
     tag: "THE SIGNATURE",
     tagNl: "DE SIGNATUUR",
     p: "21,50",
@@ -32,6 +35,7 @@ export const SIGNATURES: Signature[] = [
   },
   {
     n: "Seeraga Samba Chicken Biryani",
+    dish: "Ambur Spl Seeraga Samba Chicken Biryani with Aubergine Curry & Raita",
     tag: "AMBUR ORIGINAL",
     tagNl: "ECHT AMBUR",
     p: "19,00",
@@ -45,6 +49,7 @@ export const SIGNATURES: Signature[] = [
   },
   {
     n: "Mutton Keema Dosa",
+    dish: "Spl Mutton Keema Dosa with Chicken Salna",
     tag: "CHEF'S SPECIAL",
     tagNl: "VAN DE CHEF",
     p: "16,50",
@@ -57,6 +62,7 @@ export const SIGNATURES: Signature[] = [
   },
   {
     n: "Murgh Dhaniya Shorba",
+    dish: "Chicken & Coriander Shorba (Murgh Dhaniya)",
     tag: "SIGNATURE",
     tagNl: "SIGNATUUR",
     p: "6,50",
@@ -118,7 +124,25 @@ export const CHAPTERS = CHAPTER_MAP.map(([name, nameNl, sections]) => ({
   nameNl,
   count: countOf(sections),
   img: CHAPTER_ART[sections[0]],
+  /** Where the card lands on the menu — the first section it covers. */
+  href: `/menu/#${sectionId(sections[0])}`,
 }));
+
+/**
+ * Each signature must name a dish that still exists, or its "find it on the
+ * menu" link lands on a dead anchor and the page simply sits at the top.
+ * Fails the build rather than shipping a link that quietly does nothing.
+ */
+const missing = SIGNATURES.filter((s) => !ALL_DISH_NAMES.includes(s.dish));
+if (missing.length) {
+  throw new Error(
+    "Signature dishes not found in MENU: " +
+      missing.map((s) => `${s.n} -> ${s.dish}`).join("; "),
+  );
+}
+
+/** Deep link from a signature card to its dish on the menu. */
+export const signatureHref = (s: Signature) => `/menu/#${dishId(s.dish)}`;
 
 /** Autoplay interval shared by both signature presentations. */
 export const SIG_ROTATE_MS = 4500;

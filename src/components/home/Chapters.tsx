@@ -117,7 +117,7 @@ export default function Chapters() {
                   <span className="ch-arrow"> →</span>
                 </span>
                 <Link
-                  href="/menu"
+                  href={c.href}
                   className="ch-open"
                   style={{ letterSpacing: "2px" }}
                 >
@@ -128,7 +128,7 @@ export default function Chapters() {
 
             {/* Desktop makes the whole panel a link; mobile taps to expand. */}
             <Link
-              href="/menu"
+              href={c.href}
               className="chapter-hit"
               aria-label={`${c.name} — ${c.count} dishes`}
               tabIndex={-1}

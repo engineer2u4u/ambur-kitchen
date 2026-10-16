@@ -256,6 +256,43 @@ textarea::placeholder {
 .dish-card {
   display: flex;
   min-width: 0;
+  /* Clears the fixed header when arrived at via /menu/#dish-… */
+  scroll-margin-top: 124px;
+}
+
+/* Section headings are linked the same way from the chapter cards. */
+[data-menu-sec] {
+  scroll-margin-top: 110px;
+}
+
+@media (max-width: 900px) {
+  .dish-card {
+    scroll-margin-top: 168px;
+  }
+
+  [data-menu-sec] {
+    scroll-margin-top: 154px;
+  }
+}
+
+/*
+ * Ring the dish the reader was sent to. Without it the page just appears
+ * mid-list with nothing saying which of ninety-five dishes was meant.
+ */
+.dish-card:target {
+  outline: 1px solid rgba(219, 165, 90, 0.9);
+  outline-offset: 3px;
+  animation: dishArrive 2.4s ease both;
+}
+
+@keyframes dishArrive {
+  0%,
+  55% {
+    box-shadow: 0 0 0 4px rgba(219, 165, 90, 0.28);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(219, 165, 90, 0);
+  }
 }
 
 /*

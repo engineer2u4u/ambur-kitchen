@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLang, pick } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
-import { SIGNATURES, SIG_ROTATE_MS } from "@/lib/signatures";
+import { SIGNATURES, SIG_ROTATE_MS, signatureHref } from "@/lib/signatures";
 import { useTilt } from "@/hooks/useTilt";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
@@ -189,7 +189,7 @@ export default function Signatures() {
           {pick(lang, cur.d, cur.nl)}
         </p>
         <Link
-          href="/menu"
+          href={signatureHref(cur)}
           style={{
             display: "inline-block",
             marginTop: 24,

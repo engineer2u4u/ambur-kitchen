@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useLang, pick } from "@/lib/LanguageProvider";
 import { colors, cream, goldA } from "@/lib/theme";
-import { SIGNATURES } from "@/lib/signatures";
+import { SIGNATURES, signatureHref } from "@/lib/signatures";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const GAP = 14;
@@ -189,7 +189,7 @@ export default function SignaturesMobile() {
                 {pick(lang, s.dShort, s.nlShort)}
               </p>
               <Link
-                href="/menu"
+                href={signatureHref(s)}
                 style={{
                   display: "inline-block",
                   marginTop: 14,
