@@ -22,8 +22,8 @@ export const restaurant = {
   street: "Hooikade 52",
   postal: "2514 BK Den Haag, Netherlands",
   addressLine: "Hooikade 52, 2514 BK Den Haag, Netherlands",
-  phone: "+31 70 887 7990",
-  phoneHref: "tel:+31708877990",
+  phone: "+31 6 44893159",
+  phoneHref: "tel:+31644893159",
   email: "denhaag@theamburkitchen.nl",
   hoursShort:
     "Mon, Wed–Fri 17:00–22:00 · Sat–Sun 12:00–22:00 · Tuesday closed",
