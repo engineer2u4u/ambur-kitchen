@@ -26,7 +26,7 @@ export const restaurant = {
   phoneHref: "tel:+31644893159",
   email: "denhaag@theamburkitchen.nl",
   hoursShort:
-    "Mon, Wed–Thu 17:00–21:30 · Fri 17:00–22:00 · Sat–Sun 12:00–22:00 · Tuesday closed",
+    "Mon, Wed–Thu 17:00–21:30 · Fri 12:00–21:30 · Sat–Sun 12:00–22:00 · Tuesday closed",
 } as const;
 
 export const cream = (alpha: number) => `rgba(242,236,223,${alpha})`;

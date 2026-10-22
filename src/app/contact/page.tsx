@@ -13,7 +13,7 @@ const HOURS: [string, string, boolean?][] = [
   ["Monday", "17:00 – 21:30"],
   ["Tuesday", "Closed", true],
   ["Wed – Thu", "17:00 – 21:30"],
-  ["Friday", "17:00 – 22:00"],
+  ["Friday", "12:00 – 21:30"],
   ["Sat – Sun", "12:00 – 22:00"],
 ];
 
