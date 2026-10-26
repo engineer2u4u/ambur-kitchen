@@ -17,8 +17,13 @@ const HOURS: [string, string, boolean?][] = [
   ["Sat – Sun", "12:00 – 22:00"],
 ];
 
+/*
+ * Built from our own address rather than a place id, so it cannot drift onto
+ * a neighbouring business the way the previous embed had. A maps.app.goo.gl
+ * short link cannot be used here: Google refuses to be framed on that host.
+ */
 const MAP_EMBED =
-  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2451.6343156671223!2d4.309501076991126!3d52.08638646824203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b73978a3d209%3A0x916d4964403bd793!2sKrishna%20Vilas%20Den%20Haag%20-%20Indian%20Vegetarian%2FVegan%20restaurant!5e0!3m2!1sen!2sin!4v1786734749888!5m2!1sen!2sin";
+  "https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sHooikade+52,+2514+BK+Den+Haag,+Netherlands";
 
 const panelStyle = {
   border: `1px solid ${goldA(0.22)}`,
