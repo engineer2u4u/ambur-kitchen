@@ -18,12 +18,13 @@ const HOURS: [string, string, boolean?][] = [
 ];
 
 /*
- * Built from our own address rather than a place id, so it cannot drift onto
- * a neighbouring business the way the previous embed had. A maps.app.goo.gl
- * short link cannot be used here: Google refuses to be framed on that host.
+ * Our own Google listing, so the pin carries the restaurant's name rather
+ * than a bare address marker. Straight from Maps → Share → Embed a map; a
+ * maps.app.goo.gl short link cannot be used here, as Google refuses to be
+ * framed on that host.
  */
 const MAP_EMBED =
-  "https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sHooikade+52,+2514+BK+Den+Haag,+Netherlands";
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d612.909554697815!2d4.311561569689226!3d52.08631542232049!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5b732c21244eb%3A0xd250445ff02375ba!2sThe%20Ambur%20Kitchen!5e0!3m2!1sen!2sin!4v1793078783438!5m2!1sen!2sin";
 
 const panelStyle = {
   border: `1px solid ${goldA(0.22)}`,
